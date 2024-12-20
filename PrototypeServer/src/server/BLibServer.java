@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import ocsf.server.*;
@@ -80,23 +81,15 @@ public class BLibServer extends AbstractServer
   private void pingConnections() throws InterruptedException {
 	  while(true) {
 		  if(flagKillPingThread)
-			  	return;
-		  for(ConnectionToClient client : connections) {
+			  	return; 
+		  int connectionsSize = connections.size();
+		  for(int i=0; i<connectionsSize; i++) {
+			  ConnectionToClient client = connections.get(i);
 			  if(!client.isAlive()) {
-				  timeouts.put(client, timeouts.get(client)-1);
-				  if(timeouts.get(client) <= 0) {
-					  handleClientDisconnection(client);
-				  }
+				  handleClientDisconnection(client);
+				  System.out.println(client + " disconnected.");
+				  connectionsSize--;
 			  }
-			  else {
-				  if(timeouts.get(client) != MAX_TIMEOUTS)
-					  timeouts.put(client, MAX_TIMEOUTS);
-			  }
-		  }
-		  //DEBUG Print
-		  System.out.println("Clients connected:");
-		  for(ConnectionToClient client : connections) {
-			  System.out.println(client);
 		  }
 		  Thread.sleep(1000);
 	  }
@@ -125,10 +118,7 @@ public class BLibServer extends AbstractServer
 	 
 	 if(msg.equals("connect")) {
 		 handleClientConnection(client);
-		 handleMessageToClient("msg: connected to server", client);
-	 }
-	 else if(msg.equals("disconnect")) {
-		 handleClientDisconnection(client);
+		 handleMessageToClient("msg connected to server", client);
 	 }
 	 else {
 		 handleMessageToClient("echo: " + msg, client);
