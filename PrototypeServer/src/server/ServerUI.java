@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 import java.util.Vector;
 import gui.ServerPortFrameController;
-import server.EchoServer;
+import server.BLibServer;
 
 public class ServerUI extends Application {
 	final public static int DEFAULT_PORT = 5555;
@@ -36,7 +36,7 @@ public class ServerUI extends Application {
 	        	System.out.println("ERROR - Could not connect!");
 	        }
 	    	
-	        EchoServer sv = new EchoServer(port);
+	        BLibServer sv = new BLibServer(port);
 	        
 	        try 
 	        {

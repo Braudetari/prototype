@@ -8,24 +8,32 @@ import client.ClientController;
 
 public class ClientUI extends Application {
 	public static ClientController chat; //only one instance
-	public static String ConnectionIP;
+	private static String ConnectionIP;
+	private static int port;
 	
 	public static void main( String args[] ) throws Exception
 	   { 
 			try {
-				ConnectionIP = args[1];
+				ConnectionIP = args[0]; //first argument should be IP
 			}
 			catch(Exception e) {
 				ConnectionIP = "localhost";
 			}
-			if(ConnectionIP.equals("") || ConnectionIP == null)
-				ConnectionIP = "localhost";
+			
+			try {
+				port = Integer.parseInt(args[1]); //second argument should be port
+				
+			}
+			catch(Exception e) {
+				port = 5555;
+			}
 		    launch(args); 
 	   } // end main
 	 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		 chat= new ClientController(ConnectionIP, 5555);
+		 chat= new ClientController(ConnectionIP, port);
+		 chat.accept("connect");
 		// TODO Auto-generated method stub
 						  		
 		 ConnectionFrameController aFrame = new ConnectionFrameController(); // create StudentFrame
