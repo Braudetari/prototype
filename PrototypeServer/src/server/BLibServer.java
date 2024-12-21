@@ -93,7 +93,7 @@ public class BLibServer extends AbstractServer
    * If fails MAX_TIMEOUTS in a row will disconnect client
    * @throws InterruptedException
    */
-  private void pingConnections() throws InterruptedException {
+  public void pingConnections() throws InterruptedException {
 	  while(true) {
 		  if(flagKillPingThread)
 			  	return; 

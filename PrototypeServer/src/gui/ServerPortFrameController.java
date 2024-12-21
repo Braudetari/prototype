@@ -23,7 +23,7 @@ import server.BLibServer;
 import server.ServerUI;
 
 public class ServerPortFrameController  {
-	
+	private BLibServer server;
 	String temp="";
 	private final static String title = "Server - Port";
 	
@@ -53,25 +53,23 @@ public class ServerPortFrameController  {
 		else
 		{
 			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			ServerUI.runServer(p);
+			server = ServerUI.runServer(p);
+			ServerConnectionsFrameController serverConnectionsFrameController = new ServerConnectionsFrameController();
+			serverConnectionsFrameController.start(new Stage(), server);
 		}
 	}
 
-	public void start(Stage primaryStage, BLibServer server) throws Exception {	
-		Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerPort.fxml"));
-				
+	public void start(Stage primaryStage) throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerPort.fxml"));			
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/ServerPort.css").toExternalForm());
 		primaryStage.setTitle(title);
 		primaryStage.setScene(scene);
-		
-		primaryStage.show();		
+		primaryStage.show();
 	}
 	
 	public void getExitBtn(ActionEvent event) throws Exception {
-		System.out.println("exit Academic Tool");
+		System.out.println("Exit - Server Port Frame");
 		System.exit(0);			
 	}
 

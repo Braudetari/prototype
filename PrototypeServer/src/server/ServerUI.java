@@ -11,7 +11,7 @@ import server.BLibServer;
 
 public class ServerUI extends Application {
 	final public static int DEFAULT_PORT = 5555;
-	private static BLibServer server;
+	static BLibServer server;
 	
 	public static void main( String args[] ) throws Exception
 	   {   
@@ -22,10 +22,10 @@ public class ServerUI extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub				  		
 		ServerPortFrameController ServerPortFrame = new ServerPortFrameController(); // create StudentFrame
-		ServerPortFrame.start(primaryStage, server);
+		ServerPortFrame.start(primaryStage);
 	}
 	
-	public static void runServer(String p)
+	public static BLibServer runServer(String p)
 	{
 		 int port = 0; //Port to listen on
 
@@ -45,6 +45,7 @@ public class ServerUI extends Application {
 	        catch(Exception e) {
 	        	System.out.println("ERROR - could not connect to DB");
 	        	stopServer();
+	        	return null;
 	        }
 	        try 
 	        {
@@ -53,7 +54,10 @@ public class ServerUI extends Application {
 	        catch (Exception ex) 
 	        {
 	          System.out.println("ERROR - Could not listen for clients!");
+	          stopServer();
+	          return null;
 	        }
+	        return server;
 	}
 	
 	public static void stopServer() {
