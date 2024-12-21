@@ -19,11 +19,6 @@ PrototypeServer:
 - Implement ServerConnectionsForm
 	+ Basic Buttons: Shutdown, Refresh
 	+ Realtime update for Connections, including status.
-- Implement ConnectionStatus class
-	+ Connection info saved
-	+ UpdateConnection
-	+ AddConnection
-	+ RemoveConnection
 
 Common Classes:
 - MessageCapsule, implement encryption/decryption for string (avoid space)
