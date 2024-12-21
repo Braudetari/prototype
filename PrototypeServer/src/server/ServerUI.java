@@ -9,7 +9,7 @@ import server.BLibServer;
 
 public class ServerUI extends Application {
 	final public static int DEFAULT_PORT = 5555;
-
+	private static BLibServer server;
 	public static void main( String args[] ) throws Exception
 	   {   
 		 launch(args);
@@ -18,8 +18,8 @@ public class ServerUI extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub				  		
-		ServerPortFrameController aFrame = new ServerPortFrameController(); // create StudentFrame
-		aFrame.start(primaryStage);
+		ServerPortFrameController ServerPortFrame = new ServerPortFrameController(); // create StudentFrame
+		ServerPortFrame.start(primaryStage, server);
 	}
 	
 	public static void runServer(String p)
@@ -28,19 +28,18 @@ public class ServerUI extends Application {
 
 	        try
 	        {
-	        	port = Integer.parseInt(p); //Set port to 5555
-	          
+	        	port = Integer.parseInt(p); //Set port	          
 	        }
 	        catch(Throwable t)
 	        {
 	        	System.out.println("ERROR - Could not connect!");
 	        }
 	    	
-	        BLibServer sv = new BLibServer(port);
+	        server = new BLibServer(port);
 	        
 	        try 
 	        {
-	          sv.listen(); //Start listening for connections
+	          server.listen(); //Start listening for connections
 	        } 
 	        catch (Exception ex) 
 	        {

@@ -59,7 +59,7 @@ public class ServerPortFrameController  {
 		}
 	}
 
-	public void start(Stage primaryStage) throws Exception {	
+	public void start(Stage primaryStage, BLibServer server) throws Exception {	
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerPort.fxml"));
 				
 		Scene scene = new Scene(root);

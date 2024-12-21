@@ -5,12 +5,15 @@ package server;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import ocsf.server.*;
+import server.ConnectionToClientInfo.ClientConnectionStatus;
 
 /**
  * This class overrides some of the methods in the abstract 
@@ -31,10 +34,8 @@ public class BLibServer extends AbstractServer
    * The default port to listen on.
    */
   //final public static int DEFAULT_PORT = 5555;
-  private static ArrayList<ConnectionToClient> connections = new ArrayList<ConnectionToClient>();
+  private static ArrayList<ConnectionToClientInfo> connections = new ArrayList<ConnectionToClientInfo>();
   private static Thread threadPing;
-  private final Integer MAX_TIMEOUTS = 3;
-  private Dictionary<ConnectionToClient, Integer> timeouts = new Hashtable<>();
   private boolean flagKillPingThread = false;
   
   //Constructors ****************************************************
@@ -53,24 +54,34 @@ public class BLibServer extends AbstractServer
 
   //Instance methods ************************************************
   
+  //return connections as readonly for viewing
+  public List<ConnectionToClientInfo> getClientConnectionsList(){
+	  return Collections.unmodifiableList(connections);
+  }
   
   private void handleClientConnection(ConnectionToClient client) {
-	  if(!connections.contains(client)) {
-		  connections.add(client);
-		  timeouts.put(client, MAX_TIMEOUTS);
+	  boolean clientExists = false;
+	  int clientIndex = -1;
+	  for(int i=0; i<connections.size() && clientExists == false; i++) {
+		  ConnectionToClientInfo clientInfo = connections.get(i);
+		  if(clientInfo.equals(client)) {
+			  clientExists = true;
+			  clientIndex = i;
+		  }
+	  }
+	  if(!clientExists) {
+		  connections.add(new ConnectionToClientInfo(client));
+	  }
+	  else {
+		  if(clientIndex >= 0) {
+			  connections.get(clientIndex).setClient(client);
+			  connections.get(clientIndex).setStatus(ClientConnectionStatus.Connected);
+		  }
 	  }
   }
   
-  private void handleClientDisconnection(ConnectionToClient client) {
-	  if(connections.contains(client)) {
-		try {
-			client.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		 connections.remove(client);
-		 timeouts.remove(client);
-	  }
+  private void handleClientDisconnection(ConnectionToClientInfo clientInfo) {
+	  clientInfo.setStatus(ClientConnectionStatus.Disconnected);
   }
   
   /**
@@ -84,10 +95,9 @@ public class BLibServer extends AbstractServer
 			  	return; 
 		  int connectionsSize = connections.size();
 		  for(int i=0; i<connectionsSize; i++) {
-			  ConnectionToClient client = connections.get(i);
-			  if(!client.isAlive()) {
-				  handleClientDisconnection(client);
-				  System.out.println(client + " disconnected.");
+			  ConnectionToClientInfo clientInfo = connections.get(i);
+			  if(!clientInfo.getClient().isAlive() && clientInfo.getStatus() == ClientConnectionStatus.Connected){
+				  handleClientDisconnection(clientInfo);
 				  connectionsSize--;
 			  }
 		  }
