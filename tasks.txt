@@ -1,0 +1,31 @@
+Tasks to do: Prototype
+
+PrototypeClient:
+- Implement Connect after 'ConnectionFrame'
+	+ Basic Buttons: Connect, NoticeFrame if Error
+- Implement SubscriberManager
+	+ Basic Buttons: Show, Close
+	+ Show All Subscribers: Name, ID
+	+ Open SubscriberInfo Screen
+- Implement SubscriberInfo:
+	+ Basic Buttons: Update, Close
+	+ Show Subscriber Info
+	+ Update Subscriber Info
+
+PrototypeServer:
+- Arguments for Database
+- ServerPortFrame:
+	+ Notice Error if can't connect to DB
+- Implement ServerConnectionsForm
+	+ Basic Buttons: Shutdown, Refresh
+	+ Realtime update for Connections, including status.
+- Implement ConnectionStatus class
+	+ Connection info saved
+	+ UpdateConnection
+	+ AddConnection
+	+ RemoveConnection
+
+Common Classes:
+- MessageCapsule, implement encryption/decryption for string (avoid space)
+- gui.NoticeFrame
+- Subscriber 
