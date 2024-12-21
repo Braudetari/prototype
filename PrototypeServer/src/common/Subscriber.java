@@ -1,7 +1,13 @@
 package common;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
 public class Subscriber {
-    private int subscriberId;
+	private int subscriberId;
     private String subscriberName;
     private int detailedSubscriptionHistory;
     private String subscriberPhoneNumber;
@@ -63,12 +69,59 @@ public class Subscriber {
 
     @Override
     public String toString() {
-        return "Subscriber{" +
-                "subscriberId=" + subscriberId +
-                ", subscriberName='" + subscriberName + '\'' +
-                ", detailedSubscriptionHistory=" + detailedSubscriptionHistory +
-                ", subscriberPhoneNumber='" + subscriberPhoneNumber + '\'' +
-                ", subscriberEmail='" + subscriberEmail + '\'' +
-                '}';
+        return new String("["+subscriberId+","
+        					+subscriberName+","
+        					+detailedSubscriptionHistory+","
+        					+subscriberPhoneNumber+","
+        					+subscriberEmail+"]");
+    }
+    
+    public static Subscriber subscriberFromString(String str) {
+    	str = str.substring(1, str.length()-1); //remove toString []
+    	StringTokenizer tokenizer = new StringTokenizer(str, ",");
+    	try{
+    		int subscriberId = Integer.parseInt(tokenizer.nextToken().trim());
+    		String subscriberName = tokenizer.nextToken().trim();
+            int detailedSubscriptionHistory = Integer.parseInt(tokenizer.nextToken().trim());
+            String subscriberPhoneNumber = tokenizer.nextToken().trim();
+            String subscriberEmail = tokenizer.nextToken().trim();
+            Subscriber subscriber = new Subscriber(subscriberId, subscriberName, detailedSubscriptionHistory, subscriberPhoneNumber, subscriberEmail);
+            return subscriber;
+    	}
+    	catch(NoSuchElementException e) {
+    		return null;
+    	}
+    }
+    public static String subscriberListToString(List<Subscriber> subscriberList) {
+    	String output = "{";
+    	Iterator<Subscriber> iterator = subscriberList.iterator();
+    	while(iterator.hasNext()) {
+    		output += iterator.next();
+    		if(iterator.hasNext()) {
+    			output += ";";
+    		}
+    	}
+    	output += "}";
+    	return output;
+    }
+    
+    public static List<Subscriber> subscriberListFromString(String str){
+		Subscriber subscriber;
+    	List<Subscriber> subscriberList = new ArrayList<Subscriber>();
+    	str = str.substring(1, str.length()-1); //remove {}
+    	StringTokenizer tokenizer = new StringTokenizer(str, ";");
+    	if(!tokenizer.hasMoreTokens()) {
+    		subscriber = subscriberFromString(str);
+    		if(subscriber == null) {
+    			return null;
+    		}
+    		subscriberList.add(subscriber);
+    	}
+    	else {
+        	while(tokenizer.hasMoreTokens()) {
+        		subscriberList.add(subscriberFromString(tokenizer.nextToken().trim()));
+        	}
+    	}
+    	return subscriberList;
     }
 }
