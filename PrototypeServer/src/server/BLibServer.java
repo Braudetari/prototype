@@ -4,6 +4,7 @@
 package server;
 
 import java.io.*;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -12,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import common.Message;
+import common.Subscriber;
 import ocsf.server.*;
 import server.ConnectionToClientInfo.ClientConnectionStatus;
 
@@ -34,9 +37,10 @@ public class BLibServer extends AbstractServer
    * The default port to listen on.
    */
   //final public static int DEFAULT_PORT = 5555;
-  private static ArrayList<ConnectionToClientInfo> connections = new ArrayList<ConnectionToClientInfo>();
+  private static ArrayList<ConnectionToClientInfo> clientConnections = new ArrayList<ConnectionToClientInfo>();
   private static Thread threadPing;
   private boolean flagKillPingThread = false;
+  Connection dbConnection; //package-private
   
   //Constructors ****************************************************
   
@@ -56,26 +60,26 @@ public class BLibServer extends AbstractServer
   
   //return connections as readonly for viewing
   public List<ConnectionToClientInfo> getClientConnectionsList(){
-	  return Collections.unmodifiableList(connections);
+	  return Collections.unmodifiableList(clientConnections);
   }
   
   private void handleClientConnection(ConnectionToClient client) {
 	  boolean clientExists = false;
 	  int clientIndex = -1;
-	  for(int i=0; i<connections.size() && clientExists == false; i++) {
-		  ConnectionToClientInfo clientInfo = connections.get(i);
+	  for(int i=0; i<clientConnections.size() && clientExists == false; i++) {
+		  ConnectionToClientInfo clientInfo = clientConnections.get(i);
 		  if(clientInfo.equals(client)) {
 			  clientExists = true;
 			  clientIndex = i;
 		  }
 	  }
 	  if(!clientExists) {
-		  connections.add(new ConnectionToClientInfo(client));
+		  clientConnections.add(new ConnectionToClientInfo(client));
 	  }
 	  else {
 		  if(clientIndex >= 0) {
-			  connections.get(clientIndex).setClient(client);
-			  connections.get(clientIndex).setStatus(ClientConnectionStatus.Connected);
+			  clientConnections.get(clientIndex).setClient(client);
+			  clientConnections.get(clientIndex).setStatus(ClientConnectionStatus.Connected);
 		  }
 	  }
   }
@@ -93,9 +97,9 @@ public class BLibServer extends AbstractServer
 	  while(true) {
 		  if(flagKillPingThread)
 			  	return; 
-		  int connectionsSize = connections.size();
+		  int connectionsSize = clientConnections.size();
 		  for(int i=0; i<connectionsSize; i++) {
-			  ConnectionToClientInfo clientInfo = connections.get(i);
+			  ConnectionToClientInfo clientInfo = clientConnections.get(i);
 			  if(!clientInfo.getClient().isAlive() && clientInfo.getStatus() == ClientConnectionStatus.Connected){
 				  handleClientDisconnection(clientInfo);
 				  connectionsSize--;
@@ -125,14 +129,34 @@ public class BLibServer extends AbstractServer
   public void handleMessageFromClient  (Object msg, ConnectionToClient client)
   {
 	 System.out.println("Message received: " + msg + " from " + client);
-	 
-	 if(msg.equals("connect")) {
-		 handleClientConnection(client);
-		 handleMessageToClient("msg connected to server", client);
+	 String[] inputs = msg.toString().split(" ");
+	 if(inputs == null)
+		 return;
+	 switch(inputs[0]) {
+	 	case "connect":
+			 handleClientConnection(client);
+			 handleMessageToClient("msg connected to server", client);
+	 		break;
+	 	
+	 	case "subscribers":
+	 		List<Subscriber> subscriberList = DatabaseConnection.getAllSubscribers(dbConnection);
+	 		String reply = Subscriber.subscriberListToString(subscriberList);
+	 		handleMessageToClient("subscribers " + Message.encryptToBase64(reply), client);
+	 		break;
+	 		
+	 	case "updatesubscriber":
+	 		//Update subscriber in DB sent from client in string form
+	 		Subscriber subscriber = Subscriber.subscriberFromString(Message.decryptFromBase64(inputs[1]));
+	 		DatabaseConnection.updateSubscriber(dbConnection, subscriber.getSubscriberId(), subscriber.getSubscriberEmail(), subscriber.getSubscriberPhoneNumber());
+	 	break;
+	 		
+	 	default:
+	 		return;
 	 }
-	 else {
-		 handleMessageToClient("echo: " + msg, client);
-	 }
+	 //Echo behaviour
+//	 else {
+//		 handleMessageToClient("echo: " + msg, client);
+//	 }
   }
    
   /**
