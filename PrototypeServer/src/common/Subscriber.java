@@ -13,6 +13,14 @@ public class Subscriber {
     private String subscriberPhoneNumber;
     private String subscriberEmail;
 
+    public Subscriber(Subscriber subscriber) {
+    	this.subscriberId = subscriber.subscriberId;
+    	this.subscriberName = subscriber.subscriberName;
+    	this.detailedSubscriptionHistory = subscriber.detailedSubscriptionHistory;
+    	this.subscriberPhoneNumber = subscriber.subscriberPhoneNumber;
+    	this.subscriberEmail = subscriber.subscriberEmail;
+    }
+    
     // Constructor
     public Subscriber(int subscriberId, String subscriberName, int detailedSubscriptionHistory, String subscriberPhoneNumber, String subscriberEmail) {
         this.subscriberId = subscriberId;

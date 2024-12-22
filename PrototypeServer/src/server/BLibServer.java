@@ -148,6 +148,7 @@ public class BLibServer extends AbstractServer
 	 		//Update subscriber in DB sent from client in string form
 	 		Subscriber subscriber = Subscriber.subscriberFromString(Message.decryptFromBase64(inputs[1]));
 	 		DatabaseConnection.updateSubscriber(dbConnection, subscriber.getSubscriberId(), subscriber.getSubscriberEmail(), subscriber.getSubscriberPhoneNumber());
+	 		handleMessageToClient("updated subscriber.", client);
 	 	break;
 	 		
 	 	default:

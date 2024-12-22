@@ -7,8 +7,12 @@ package client;
 import ocsf.client.*;
 import client.*;
 import common.ChatIF;
+import common.Message;
+import common.Subscriber;
 
 import java.io.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -29,7 +33,9 @@ public class ChatClient extends AbstractClient
    */
   ChatIF clientUI; 
   public static boolean awaitResponse = false;
-
+  public ConnectionStatus status;
+  public static enum ConnectionStatus{Disconnected, Connected}; 
+  private List<Subscriber> subscriberList;
   //Constructors ****************************************************
   
   /**
@@ -45,11 +51,21 @@ public class ChatClient extends AbstractClient
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.status = ConnectionStatus.Disconnected;
     //openConnection();
   }
 
+  //More Methods
+  
+  public List<Subscriber> getSubscriberList(){
+	  if(subscriberList == null) {
+		  return null;
+	  }
+	  return Collections.unmodifiableList(subscriberList);
+  }
+  
   //Instance methods ************************************************
-    
+   
   /**
    * This method handles all data that comes in from the server.
    *
@@ -58,9 +74,20 @@ public class ChatClient extends AbstractClient
   public void handleMessageFromServer(Object msg) 
   {
 	  System.out.println("--> " + msg);
-     
+	  String[] inputs = msg.toString().split(" ");
+	  
+	  if(inputs[0] != null) {
+		  switch(inputs[0]) {
+		  	case "subscribers":
+		  			subscriberList = Subscriber.subscriberListFromString(Message.decryptFromBase64(inputs[1]));
+		  		break;
+		  	default:
+		  		break;
+		  }
+			  
+	  }
+	  
 	  awaitResponse = false;
-	 
   }
 
   /**
@@ -84,6 +111,7 @@ public class ChatClient extends AbstractClient
 				e.printStackTrace();
 			}
 		}
+		status = ConnectionStatus.Connected;
     }
     catch(IOException e)
     {
@@ -104,7 +132,7 @@ public class ChatClient extends AbstractClient
       closeConnection();
     }
     catch(IOException e) {}
-    System.exit(0);
+    //System.exit(0);
   }
 }
 //End of ChatClient class

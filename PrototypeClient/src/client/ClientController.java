@@ -3,8 +3,11 @@
 // license found at www.lloseng.com 
 package client;
 import java.io.*;
+import java.util.List;
+
 import client.*;
 import common.ChatIF;
+import common.Subscriber;
 
 
 /**
@@ -25,7 +28,6 @@ public class ClientController implements ChatIF
    * The default port to connect on.
    */
    public static int DEFAULT_PORT ;
-  
   //Instance variables **********************************************
   
   /**
@@ -57,6 +59,11 @@ public class ClientController implements ChatIF
   
   //Instance methods ************************************************
   
+  public List<Subscriber> requestSubscribersFromServer(){
+	  accept("subscribers");
+	  return client.getSubscriberList();
+  }
+  
   /**
    * This method waits for input from the console.  Once it is 
    * received, it sends it to the client's message handler.
@@ -75,6 +82,11 @@ public class ClientController implements ChatIF
   public void display(String message) 
   {
     System.out.println("> " + message);
+  }
+  
+  public ChatClient.ConnectionStatus getConnectionStatus(){
+	  ChatClient.ConnectionStatus status = client.status;
+	  return status;
   }
 }
 //End of ConsoleChat class
