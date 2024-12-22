@@ -89,7 +89,6 @@ public  class ConnectionFrameController   {
 			 }
 			 else { //Connection Failed
 				 //Open Notice with error
-				 Stage primaryStage = new Stage();
 				 String noticeMessage = "Could not connect to Server \""+getServerIP()+":"+getport()+"\"";
 				 NoticeFrameController noticeFrameController = new NoticeFrameController();
 				 noticeFrameController.start(noticeMessage);

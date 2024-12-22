@@ -3,8 +3,11 @@
 // license found at www.lloseng.com 
 package client;
 import java.io.*;
+import java.util.List;
+
 import client.*;
 import common.ChatIF;
+import common.Subscriber;
 
 
 /**
@@ -55,6 +58,11 @@ public class ClientController implements ChatIF
 
   
   //Instance methods ************************************************
+  
+  public List<Subscriber> requestSubscribersFromServer(){
+	  accept("subscribers");
+	  return client.getSubscriberList();
+  }
   
   /**
    * This method waits for input from the console.  Once it is 

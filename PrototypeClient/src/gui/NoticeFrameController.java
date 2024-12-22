@@ -40,6 +40,7 @@ public class NoticeFrameController {
 		controller.loadText(noticeMessage);
 	}
 	
+	@FXML
 	public void getOKBtn(ActionEvent event) throws Exception {
 		//Close the window
 		Stage thisStage = (Stage)((Node)event.getSource()).getScene().getWindow();
