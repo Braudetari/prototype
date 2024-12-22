@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import common.Subscriber;
 
 public class DatabaseConnection {
-    public static Connection connectToDB() {
+    public static Connection connectToDB(String DBIp, String DBScheme, String DBUser, String DBPass) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             System.out.println("Driver definition succeeded.");
@@ -20,9 +20,9 @@ public class DatabaseConnection {
         }
         try {
             Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://5.29.139.39/prototypedb?serverTimezone=IST", 
-                "admin", 
-                "braudesucks"
+                "jdbc:mysql://"+DBIp+"/"+DBScheme+"?serverTimezone=IST", 
+                DBUser,
+                DBPass
             );
             System.out.println("SQL connection succeeded.");
             return conn;
@@ -89,34 +89,6 @@ public class DatabaseConnection {
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
             return false;
-        }
-    }
-
-    public static void main(String[] args) {
-        Connection connection = connectToDB();
-        
-        if (connection != null) {
-            // Fetch all subscribers
-            ArrayList<Subscriber> subscribers = getAllSubscribers(connection);
-            
-            if (!subscribers.isEmpty()) {
-                
-                Subscriber subscriber = subscribers.get(0); // Get the first subscriber (modify the index as needed)
-                System.out.println("Subscriber before update: " + subscriber);
-                
-                // Update subscriber information
-                boolean success = updateSubscriber(connection, subscriber.getSubscriberId(), "newemail@example.com", "123-456-7890");
-                
-                if (success) {
-                    System.out.println("Updated Subscriber: " + subscriber);
-                } else {
-                    System.out.println("Failed to update subscriber information.");
-                }
-            } else {
-                System.out.println("No subscribers found.");
-            }
-        } else {
-            System.out.println("Failed to establish database connection.");
         }
     }
 
