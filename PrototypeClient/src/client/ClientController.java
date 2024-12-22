@@ -25,7 +25,6 @@ public class ClientController implements ChatIF
    * The default port to connect on.
    */
    public static int DEFAULT_PORT ;
-  
   //Instance variables **********************************************
   
   /**
@@ -75,6 +74,11 @@ public class ClientController implements ChatIF
   public void display(String message) 
   {
     System.out.println("> " + message);
+  }
+  
+  public ChatClient.ConnectionStatus getConnectionStatus(){
+	  ChatClient.ConnectionStatus status = client.status;
+	  return status;
   }
 }
 //End of ConsoleChat class

@@ -44,20 +44,25 @@ public  class ConnectionFrameController   {
 		return serverIPTxt.getText();
 	}
 	
-	private String getport() {
-		return portTxt.getText();
+	private int getport() {
+		return Integer.parseInt(portTxt.getText());
 	}
 	
+	private void initializeText(String ip, String port) {
+		serverIPTxt.setText(ip);
+		portTxt.setText(port);
+	}
 
-	public void start(Stage primaryStage) throws Exception {	
-		Parent root = FXMLLoader.load(getClass().getResource("/gui/ConnectionFrame.fxml"));
-				
+	public void start(Stage primaryStage, String ConnectionIP, int ConnectionPort) throws Exception {	
+		FXMLLoader loader = new FXMLLoader();
+		Parent root = loader.load(getClass().getResource("/gui/ConnectionFrame.fxml").openStream());
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/ConnectionFrame.css").toExternalForm());
+		ConnectionFrameController controller = loader.getController();
+		controller.initializeText(ConnectionIP, "" + ConnectionPort);
 		primaryStage.setTitle(title);
 		primaryStage.setScene(scene);
-		
-		primaryStage.show();	 	   
+		primaryStage.show();	 	 
 	}
 	
 	public void getExitBtn(ActionEvent event) throws Exception {
@@ -68,29 +73,28 @@ public  class ConnectionFrameController   {
 	public void getConnectBtn(ActionEvent event) throws Exception{
 		
 		FXMLLoader loader = new FXMLLoader();
-		if(this.getServerIP().trim().isEmpty() || this.getport().trim().isEmpty() ) {
-			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-			Stage primaryStage = new Stage();
-			Pane root = loader.load(getClass().getResource("/gui/NoticeFrame.fxml").openStream());
-			//ConnectionFrameController connectionFrameController = loader.getController();		
-			//connectionFrameController.(ChatClient.s1);
-			Scene scene = new Scene(root);			
-			scene.getStylesheets().add(getClass().getResource("/gui/NoticeFrame.css").toExternalForm());
-			primaryStage.setTitle("Notice");
-			primaryStage.setScene(scene);		
-			primaryStage.show();
+		//Don't leave text empty
+		if(this.getServerIP().trim().isEmpty() || (""+this.getport()).trim().isEmpty() ) {
+			NoticeFrameController errorNotice = new NoticeFrameController();
+			errorNotice.start("Please fill empty text fields!");
 		}
 		else {
-			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
-			Stage primaryStage = new Stage();
-			Pane root = loader.load(getClass().getResource("/gui/SubscriberManagerFrame.fxml").openStream());
-			//ConnectionFrameController connectionFrameController = loader.getController();		
-			//connectionFrameController.(ChatClient.s1);
-			Scene scene = new Scene(root);			
-			scene.getStylesheets().add(getClass().getResource("/gui/SubscriberManagerFrame.css").toExternalForm());
-			primaryStage.setTitle("Subscriber Management");
-			primaryStage.setScene(scene);		
-			primaryStage.show();
+			ClientUI.chat = new ClientController(getServerIP(), getport());
+			System.out.println();
+			ClientUI.chat.accept("connect");
+			 if(ClientUI.chat.getConnectionStatus().toString() == "Connected") { //Connection Success
+					((Stage)((Node)event.getSource()).getScene().getWindow()).close(); //close ConnectionFrame
+					SubscriberManagerFrameController subscriberManagerFrame = new SubscriberManagerFrameController();
+					subscriberManagerFrame.start(new Stage());
+			 }
+			 else { //Connection Failed
+				 //Open Notice with error
+				 Stage primaryStage = new Stage();
+				 String noticeMessage = "Could not connect to Server \""+getServerIP()+":"+getport()+"\"";
+				 NoticeFrameController noticeFrameController = new NoticeFrameController();
+				 noticeFrameController.start(noticeMessage);
+			 }
+
 		}
 		
 		

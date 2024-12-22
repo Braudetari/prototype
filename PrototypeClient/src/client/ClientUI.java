@@ -32,13 +32,11 @@ public class ClientUI extends Application {
 	 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		 chat= new ClientController(ConnectionIP, port);
-		 chat.accept("connect");
 		// TODO Auto-generated method stub
 						  		
-		 ConnectionFrameController aFrame = new ConnectionFrameController(); // create StudentFrame
+		 ConnectionFrameController connectionFrameController = new ConnectionFrameController(); // create StudentFrame
 		 
-		aFrame.start(primaryStage);
+		connectionFrameController.start(primaryStage, ConnectionIP, port);
 	}
 	
 	

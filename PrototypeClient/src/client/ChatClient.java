@@ -29,7 +29,8 @@ public class ChatClient extends AbstractClient
    */
   ChatIF clientUI; 
   public static boolean awaitResponse = false;
-
+  public ConnectionStatus status;
+  public static enum ConnectionStatus{Disconnected, Connected};
   //Constructors ****************************************************
   
   /**
@@ -45,6 +46,7 @@ public class ChatClient extends AbstractClient
   {
     super(host, port); //Call the superclass constructor
     this.clientUI = clientUI;
+    this.status = ConnectionStatus.Disconnected;
     //openConnection();
   }
 
@@ -84,6 +86,7 @@ public class ChatClient extends AbstractClient
 				e.printStackTrace();
 			}
 		}
+		status = ConnectionStatus.Connected;
     }
     catch(IOException e)
     {
@@ -104,7 +107,7 @@ public class ChatClient extends AbstractClient
       closeConnection();
     }
     catch(IOException e) {}
-    System.exit(0);
+    //System.exit(0);
   }
 }
 //End of ChatClient class

@@ -24,10 +24,18 @@ public class SubscriberManagerFrameController {
 	@FXML
 	private Label labelmsg=null;
 	
+	public void start(Stage primaryStage) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		Pane root = loader.load(getClass().getResource("/gui/SubscriberManagerFrame.fxml").openStream());
+		Scene scene = new Scene(root);			
+		scene.getStylesheets().add(getClass().getResource("/gui/SubscriberManagerFrame.css").toExternalForm());
+		primaryStage.setTitle("Subscriber Management");
+		primaryStage.setScene(scene);		
+		primaryStage.show();
+	}
 	
 	public void getOpenBtn(ActionEvent event) throws Exception{
 		FXMLLoader loader = new FXMLLoader();
-		((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
 		Stage primaryStage = new Stage();
 		Pane root = loader.load(getClass().getResource("/gui/SubscriberInfoFrame.fxml").openStream());
 		//ConnectionFrameController connectionFrameController = loader.getController();		
@@ -41,7 +49,8 @@ public class SubscriberManagerFrameController {
 	
 	public void getCloseButton(ActionEvent event) throws Exception {
 		FXMLLoader loader = new FXMLLoader();
-		((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window	
+		((Stage)((Node)event.getSource()).getScene().getWindow()).close(); //close window
+		System.exit(0); //close client
 	}
 	
 	
