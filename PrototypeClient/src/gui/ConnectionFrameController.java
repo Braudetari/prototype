@@ -1,12 +1,13 @@
 package gui;
 
 import java.io.IOException;
-
+import java.net.InetAddress;
 
 import client.ChatClient;
 import client.ClientController;
 import client.ClientUI;
 import common.ChatIF;
+import common.Message;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -81,7 +82,8 @@ public  class ConnectionFrameController   {
 		else {
 			ClientUI.chat = new ClientController(getServerIP(), getport());
 			System.out.println();
-			ClientUI.chat.accept("connect");
+			//send connect request with client name
+			ClientUI.chat.accept("connect " + Message.encryptToBase64(InetAddress.getLocalHost().getHostName()));
 			 if(ClientUI.chat.getConnectionStatus().toString() == "Connected") { //Connection Success
 					((Stage)((Node)event.getSource()).getScene().getWindow()).close(); //close ConnectionFrame
 					SubscriberManagerFrameController subscriberManagerFrame = new SubscriberManagerFrameController();

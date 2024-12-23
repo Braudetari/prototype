@@ -63,7 +63,7 @@ public class BLibServer extends AbstractServer
 	  return Collections.unmodifiableList(clientConnections);
   }
   
-  private void handleClientConnection(ConnectionToClient client) {
+  private void handleClientConnection(ConnectionToClient client, String clientName) {
 	  boolean clientExists = false;
 	  int clientIndex = -1;
 	  for(int i=0; i<clientConnections.size() && clientExists == false; i++) {
@@ -74,7 +74,7 @@ public class BLibServer extends AbstractServer
 		  }
 	  }
 	  if(!clientExists) {
-		  clientConnections.add(new ConnectionToClientInfo(client));
+		  clientConnections.add(new ConnectionToClientInfo(client, clientName));
 	  }
 	  else {
 		  if(clientIndex >= 0) {
@@ -134,7 +134,8 @@ public class BLibServer extends AbstractServer
 		 return;
 	 switch(inputs[0]) {
 	 	case "connect":
-			 handleClientConnection(client);
+	 		 String clientName = inputs[1];
+			 handleClientConnection(client, Message.decryptFromBase64(clientName));
 			 handleMessageToClient("msg connected to server", client);
 	 		break;
 	 	

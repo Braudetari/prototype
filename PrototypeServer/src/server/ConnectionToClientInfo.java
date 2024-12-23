@@ -11,9 +11,9 @@ public class ConnectionToClientInfo {
 	
 	public static enum ClientConnectionStatus{Disconnected, Connected};
 	
-	ConnectionToClientInfo(ConnectionToClient client){
+	ConnectionToClientInfo(ConnectionToClient client, String clientName){
 		this.client = client;
-		clientName = client.getInetAddress().getHostName();
+		this.clientName = clientName;
 		clientIp = client.getInetAddress().getHostAddress();
 		clientStatus = ClientConnectionStatus.Connected;
 	}
