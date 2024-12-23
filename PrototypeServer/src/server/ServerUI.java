@@ -11,10 +11,10 @@ import server.BLibServer;
 
 public class ServerUI extends Application {
 	final public static int DEFAULT_PORT = 5555;
-	final public static String DEFAULT_DB_IP = "5.29.139.39";
+	final public static String DEFAULT_DB_IP = "localhost";
 	final public static String DEFAULT_DB_SCHEME = "prototypedb";
-	final public static String DEFAULT_DB_USER = "admin";
-	final public static String DEFAULT_DB_PASS = "braudesucks";
+	final public static String DEFAULT_DB_USER = "root";
+	final public static String DEFAULT_DB_PASS = "Aa123456";
 	public static String DB_IP = DEFAULT_DB_IP;
 	public static String DB_SCHEME = DEFAULT_DB_SCHEME;
 	public static String DB_USER = DEFAULT_DB_USER;
