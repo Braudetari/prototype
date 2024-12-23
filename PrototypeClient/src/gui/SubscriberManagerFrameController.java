@@ -114,6 +114,8 @@ public class SubscriberManagerFrameController {
 			observableSubscribers.clear();
 			observableSubscribers.addAll(subscriberList);
 		}
+		selectedSubscriber = null;
+		btnOpen.setDisable(true);
 	}
 	
 	@FXML
