@@ -11,6 +11,8 @@ import common.Message;
 import common.Subscriber;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,6 +82,14 @@ public class ChatClient extends AbstractClient
 		  switch(inputs[0]) {
 		  	case "subscribers":
 		  			subscriberList = Subscriber.subscriberListFromString(Message.decryptFromBase64(inputs[1]));
+		  		break;
+		  		
+		  	case "requestConnect":
+					try {
+						sendToServer("connect " + Message.encryptToBase64(InetAddress.getLocalHost().getHostName()));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 		  		break;
 		  	default:
 		  		break;

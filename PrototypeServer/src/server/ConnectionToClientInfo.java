@@ -30,8 +30,8 @@ public class ConnectionToClientInfo {
 		return this.client;
 	}
 	
-	public boolean equals(ConnectionToClient client) {
-		if(this.clientName.equals(client.getInetAddress().getHostName())
+	public boolean equals(ConnectionToClient client, String clientName) {
+		if(this.clientName.equals(clientName)
 				&& this.clientIp.equals(client.getInetAddress().getHostAddress())) {
 			return true;
 		}

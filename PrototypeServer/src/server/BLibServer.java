@@ -63,12 +63,21 @@ public class BLibServer extends AbstractServer
 	  return Collections.unmodifiableList(clientConnections);
   }
   
+  private boolean isClientInList(ConnectionToClient client) {
+	  for(ConnectionToClientInfo clientInfo : clientConnections) {
+		  if(clientInfo.getClient().equals(client)) {
+			  return true;
+		  }
+	  }
+	  return false;
+  }
+  
   private void handleClientConnection(ConnectionToClient client, String clientName) {
 	  boolean clientExists = false;
 	  int clientIndex = -1;
 	  for(int i=0; i<clientConnections.size() && clientExists == false; i++) {
 		  ConnectionToClientInfo clientInfo = clientConnections.get(i);
-		  if(clientInfo.equals(client)) {
+		  if(clientInfo.equals(client, clientName)) {
 			  clientExists = true;
 			  clientIndex = i;
 		  }
@@ -102,7 +111,7 @@ public class BLibServer extends AbstractServer
 			  ConnectionToClientInfo clientInfo = clientConnections.get(i);
 			  if(!clientInfo.getClient().isAlive() && clientInfo.getStatus() == ClientConnectionStatus.Connected){
 				  handleClientDisconnection(clientInfo);
-				  connectionsSize--;
+				  connectionsSize--; //relic of old when we used to delete our connections
 			  }
 		  }
 		  Thread.sleep(1000);
@@ -154,6 +163,9 @@ public class BLibServer extends AbstractServer
 	 		
 	 	default:
 	 		return;
+	 }
+	 if(!isClientInList(client)) {
+		 handleMessageToClient("requestConnect", client);
 	 }
 	 //Echo behaviour
 //	 else {
