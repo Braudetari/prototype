@@ -87,18 +87,33 @@ public class Subscriber {
     public static Subscriber subscriberFromString(String str) {
     	str = str.substring(1, str.length()-1); //remove toString []
     	StringTokenizer tokenizer = new StringTokenizer(str, ",");
+    	int subscriberId;
+    	String subscriberName;
+    	int detailedSubscriptionHistory;
+    	String subscriberPhoneNumber;
+    	String subscriberEmail;
     	try{
-    		int subscriberId = Integer.parseInt(tokenizer.nextToken().trim());
-    		String subscriberName = tokenizer.nextToken().trim();
-            int detailedSubscriptionHistory = Integer.parseInt(tokenizer.nextToken().trim());
-            String subscriberPhoneNumber = tokenizer.nextToken().trim();
-            String subscriberEmail = tokenizer.nextToken().trim();
-            Subscriber subscriber = new Subscriber(subscriberId, subscriberName, detailedSubscriptionHistory, subscriberPhoneNumber, subscriberEmail);
-            return subscriber;
+    		subscriberId = Integer.parseInt(tokenizer.nextToken().trim());
+    		subscriberName = tokenizer.nextToken().trim();
+            detailedSubscriptionHistory = Integer.parseInt(tokenizer.nextToken().trim());
     	}
+        catch(NoSuchElementException e) {
+        	   return null;
+        }
+        try {
+            subscriberPhoneNumber = tokenizer.nextToken().trim();
+        }
+        catch(NoSuchElementException e) {
+        	subscriberPhoneNumber = "";
+        }
+        try {
+            subscriberEmail = tokenizer.nextToken().trim();
+        }
     	catch(NoSuchElementException e) {
-    		return null;
+    		subscriberEmail = "";
     	}
+        Subscriber subscriber = new Subscriber(subscriberId, subscriberName, detailedSubscriptionHistory, subscriberPhoneNumber, subscriberEmail);
+        return subscriber;
     }
     public static String subscriberListToString(List<Subscriber> subscriberList) {
     	String output = "{";
