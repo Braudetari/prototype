@@ -52,7 +52,7 @@ public class ServerPortFrameController  {
 		}
 		else
 		{
-			((Node)event.getSource()).getScene().getWindow().hide(); //hiding primary window
+			((Stage)((Node)event.getSource()).getScene().getWindow()).close(); //close window
 			server = ServerUI.runServer(p);
 			ServerConnectionsFrameController serverConnectionsFrameController = new ServerConnectionsFrameController();
 			serverConnectionsFrameController.start(new Stage(), server);

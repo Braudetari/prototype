@@ -28,7 +28,7 @@ public class SubscriberManagerFrameController {
 	@FXML
 	private Button btnRefresh = null;
 	@FXML
-	private Button btnClose = null;	
+	private Button btnExit = null;	
 	@FXML
 	private Button btnOpen = null;
 	@FXML
@@ -101,7 +101,7 @@ public class SubscriberManagerFrameController {
 	}
 	
 	@FXML
-	private void Close(ActionEvent event) throws Exception {
+	private void Exit(ActionEvent event) throws Exception {
 		flagKillInfoListenThread = true;
 		((Stage)((Node)event.getSource()).getScene().getWindow()).close(); //close window
 		System.exit(0); //close client
