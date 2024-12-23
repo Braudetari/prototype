@@ -87,10 +87,11 @@ public class ServerUI extends Application {
 		server.stopListening();
 		try {
 			server.close();
+			System.exit(0);
 		} catch (IOException e) {
 			System.out.println("ERROR - could not close server");
+			System.exit(0);
 		}
-		System.exit(0);
 	}
 	
 
