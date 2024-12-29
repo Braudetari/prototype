@@ -39,7 +39,10 @@ public class SubscriberManagerFrameController {
 	private TableColumn<Subscriber, Integer> tblColumnId = null;
 	@FXML
 	private TableColumn<Subscriber, String> tblColumnName = null;
-	
+	@FXML
+	private Button btnShowAll=null;
+	@FXML
+	private Button getStudentbtn=null;
 	private final ObservableList<Subscriber> observableSubscribers = FXCollections.observableArrayList();
 	private List<Subscriber> subscriberList;
 	private Subscriber selectedSubscriber=null;
@@ -71,7 +74,7 @@ public class SubscriberManagerFrameController {
 		primaryStage.show();
 		
 		SubscriberManagerFrameController controller = loader.getController();
-		controller.initializeTable();
+		//controller.initializeTable();
 	}
 	
 	@FXML
@@ -117,6 +120,14 @@ public class SubscriberManagerFrameController {
 		selectedSubscriber = null;
 		btnOpen.setDisable(true);
 	}
+	@FXML
+	private void showAll(ActionEvent event) throws Exception {
+		refreshSubscriberList();
+		if(subscriberList != null) {
+			observableSubscribers.clear();
+		}
+		initializeTable();
+	}
 	
 	@FXML
 	private void SelectRow(MouseEvent event) throws Exception{
@@ -129,7 +140,13 @@ public class SubscriberManagerFrameController {
 		}
 	}
 	
-	
+	@FXML
+	private void getStudent(ActionEvent event) throws Exception {
+	    SubscriberSearchFrameController subscriberManagerFrame = new SubscriberSearchFrameController();
+	    subscriberManagerFrame.start(new Stage());
+	    
+	}
+
 	
 	
 }

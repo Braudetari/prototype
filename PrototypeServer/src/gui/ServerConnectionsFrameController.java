@@ -76,6 +76,7 @@ public class ServerConnectionsFrameController  {
 	public void Shutdown(ActionEvent event) throws Exception {
 		flagKillThread = true;
 		if(server.isListening()) {
+			
 			server.stopListening();
 			server.close();
 		}

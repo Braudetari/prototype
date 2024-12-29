@@ -63,7 +63,10 @@ public class ClientController implements ChatIF
 	  accept("subscribers");
 	  return client.getSubscriberList();
   }
-  
+  public Subscriber requestSubscriberFromServer(String id){
+	  accept("getsubscriber "+id);
+	  return client.getSubscriber();
+  }
   /**
    * This method waits for input from the console.  Once it is 
    * received, it sends it to the client's message handler.

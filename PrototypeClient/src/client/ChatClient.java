@@ -38,6 +38,8 @@ public class ChatClient extends AbstractClient
   public ConnectionStatus status;
   public static enum ConnectionStatus{Disconnected, Connected}; 
   private List<Subscriber> subscriberList;
+  private Subscriber subscriber;
+  
   //Constructors ****************************************************
   
   /**
@@ -65,7 +67,12 @@ public class ChatClient extends AbstractClient
 	  }
 	  return Collections.unmodifiableList(subscriberList);
   }
-  
+  public Subscriber getSubscriber(){
+	  if(subscriber == null) {
+		  return null;
+	  }
+	  return (subscriber);
+  }
   //Instance methods ************************************************
    
   /**
@@ -83,7 +90,9 @@ public class ChatClient extends AbstractClient
 		  	case "subscribers":
 		  			subscriberList = Subscriber.subscriberListFromString(Message.decryptFromBase64(inputs[1]));
 		  		break;
+		  	case "getsubscriber":
 		  		
+		  		subscriber=Subscriber.subscriberFromString(Message.decryptFromBase64(inputs[1]));
 		  	case "requestConnect":
 					try {
 						sendToServer("connect " + Message.encryptToBase64(InetAddress.getLocalHost().getHostName()));

@@ -63,7 +63,9 @@ public class ServerUI extends Application {
 	    	
 	        server = new BLibServer(port);
 	        try {
-		        server.dbConnection = DatabaseConnection.connectToDB(DB_IP, DB_SCHEME, DB_USER, DB_PASS);
+		        server.dbConnection = DatabaseConnection.getInstance(DB_IP, DB_SCHEME, DB_USER, DB_PASS);
+		        
+		        
 	        }
 	        catch(Exception e) {
 	        	System.out.println("ERROR - could not connect to DB");
@@ -84,10 +86,13 @@ public class ServerUI extends Application {
 	}
 	
 	public static void stopServer() {
+		
 		server.stopListening();
 		try {
+			
 			server.close();
 			System.exit(0);
+			
 		} catch (IOException e) {
 			System.out.println("ERROR - could not close server");
 			System.exit(0);

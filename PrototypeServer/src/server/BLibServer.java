@@ -40,7 +40,7 @@ public class BLibServer extends AbstractServer
   private static ArrayList<ConnectionToClientInfo> clientConnections = new ArrayList<ConnectionToClientInfo>();
   private static Thread threadPing;
   private boolean flagKillPingThread = false;
-  Connection dbConnection; //package-private
+  DatabaseConnection dbConnection; //package-private
   
   //Constructors ****************************************************
   
@@ -149,7 +149,7 @@ public class BLibServer extends AbstractServer
 	 		break;
 	 	
 	 	case "subscribers":
-	 		List<Subscriber> subscriberList = DatabaseConnection.getAllSubscribers(dbConnection);
+	 		List<Subscriber> subscriberList = dbConnection.getAllSubscribers();
 	 		String reply = Subscriber.subscriberListToString(subscriberList);
 	 		handleMessageToClient("subscribers " + Message.encryptToBase64(reply), client);
 	 		break;
@@ -157,9 +157,12 @@ public class BLibServer extends AbstractServer
 	 	case "updatesubscriber":
 	 		//Update subscriber in DB sent from client in string form
 	 		Subscriber subscriber = Subscriber.subscriberFromString(Message.decryptFromBase64(inputs[1]));
-	 		DatabaseConnection.updateSubscriber(dbConnection, subscriber.getSubscriberId(), subscriber.getSubscriberEmail(), subscriber.getSubscriberPhoneNumber());
+	 		dbConnection.updateSubscriber(subscriber.getSubscriberId(), subscriber.getSubscriberEmail(), subscriber.getSubscriberPhoneNumber());
 	 		handleMessageToClient("updated subscriber.", client);
 	 	break;
+	 	case "getsubscriber":
+	 		String reply1 = dbConnection.getSubscriberById(Message.decryptFromBase64(inputs[1])).toString();
+	 		handleMessageToClient("getsubscriber " + Message.encryptToBase64(reply1), client);
 	 		
 	 	default:
 	 		return;
@@ -196,6 +199,7 @@ public class BLibServer extends AbstractServer
    */
   protected void serverStopped()  {
     System.out.println ("Server has stopped listening for connections.");
+    
     flagKillPingThread = true;
   }  
 }
